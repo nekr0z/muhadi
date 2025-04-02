@@ -10,5 +10,5 @@ import (
 
 type OrderStorage interface {
 	FirstInQueue(context.Context) (*order.Order, error)
-	Update(context.Context, *order.Order) error
+	UpdateOrder(context.Context, *order.Order) error
 }

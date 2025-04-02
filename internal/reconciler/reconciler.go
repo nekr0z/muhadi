@@ -72,7 +72,7 @@ func (r *Reconciler) reconcile(ctx context.Context) {
 			return
 		}
 
-		err = r.storage.Update(ctx, ord)
+		err = r.storage.UpdateOrder(ctx, ord)
 		if err != nil {
 			log.Warn("Failed to update order status", zap.Int("orderID", ord.ID), zap.Error(err))
 		}
