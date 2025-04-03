@@ -47,8 +47,6 @@ func GetOrdersHandleFunc(log *zap.Logger, os OrderService, ts handlers.TokenServ
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
-		w.WriteHeader(http.StatusOK)
 	}
 }
 

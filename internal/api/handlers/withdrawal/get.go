@@ -47,8 +47,6 @@ func GetWithdrawalsHandleFunc(log *zap.Logger, ws WithdrawalService, ts handlers
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
-		w.WriteHeader(http.StatusOK)
 	}
 }
 

@@ -33,15 +33,14 @@ func BalanceHandleFunc(log *zap.Logger, bs BalanceService, ts handlers.TokenServ
 			return
 		}
 
+		w.Header().Set("Content-Type", "application/json")
+
 		err = json.NewEncoder(w).Encode(resp)
 		if err != nil {
 			log.Error("failed to encode orders", zap.Error(err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
 	}
 }
 
