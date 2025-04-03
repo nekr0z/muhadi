@@ -1,17 +1,15 @@
 package db
 
 import (
-	"context"
 	"database/sql"
 	"embed"
 	"errors"
+	"fmt"
 
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	"github.com/golang-migrate/migrate/v4/source/iofs"
 	_ "github.com/jackc/pgx/v5/stdlib"
-	"github.com/nekr0z/muhadi/internal/ctxlog"
-	"go.uber.org/zap"
 )
 
 //go:embed migrations/*.sql
@@ -21,10 +19,9 @@ type DB struct {
 	*sql.DB
 }
 
-func New(ctx context.Context, dsn string) (*DB, error) {
+func New(dsn string) (*DB, error) {
 	if err := applyMigrations(dsn); err != nil {
-		ctxlog.Error(ctx, "failed to apply migrations", zap.Error(err))
-		return nil, err
+		return nil, fmt.Errorf("failed to apply migrations: %w", err)
 	}
 
 	database, err := sql.Open("pgx", dsn)
@@ -35,8 +32,8 @@ func New(ctx context.Context, dsn string) (*DB, error) {
 	return &DB{database}, nil
 }
 
-func (db *DB) Close() {
-	_ = db.DB.Close()
+func (db *DB) Close() error {
+	return db.DB.Close()
 }
 
 func applyMigrations(dsn string) error {

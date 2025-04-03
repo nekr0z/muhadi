@@ -21,6 +21,8 @@ func TestReconciler(t *testing.T) {
 
 	ctx, cancel := context.WithCancel(context.Background())
 
+	r := reconciler.New(st, ac)
+
 	gomock.InOrder(
 		// normal reconciliation
 		st.EXPECT().FirstInQueue(gomock.Any()).Return(newOrder(t, 12345), nil),
@@ -51,7 +53,7 @@ func TestReconciler(t *testing.T) {
 		ac.EXPECT().Status(gomock.Any(), 12346).Return(0.0, &reconciler.ErrAccrualOverload{60 * time.Second}),
 	)
 
-	_ = reconciler.New(ctx, st, ac)
+	go r.Run(ctx)
 
 	time.Sleep(2 * time.Second)
 	cancel()

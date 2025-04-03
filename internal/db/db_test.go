@@ -47,7 +47,7 @@ func TestMain(m *testing.M) {
 		panic(err)
 	}
 
-	testDB, err = db.New(ctx, dsn)
+	testDB, err = db.New(dsn)
 	if err != nil {
 		panic(err)
 	}

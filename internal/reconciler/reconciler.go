@@ -18,19 +18,17 @@ type Reconciler struct {
 	emptySleep time.Duration
 }
 
-func New(ctx context.Context, os OrderStorage, acc Accrual) *Reconciler {
+func New(os OrderStorage, acc Accrual) *Reconciler {
 	r := &Reconciler{
 		storage:    os,
 		accrual:    acc,
 		emptySleep: defaultSleep,
 	}
 
-	go r.run(ctx)
-
 	return r
 }
 
-func (r *Reconciler) run(ctx context.Context) {
+func (r *Reconciler) Run(ctx context.Context) {
 	ctxlog.Debug(ctx, "Starting order reconciler.")
 	for {
 		select {
