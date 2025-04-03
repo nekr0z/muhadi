@@ -77,6 +77,12 @@ func TestOrders(t *testing.T) {
 		assert.Equal(t, float64(150), total)
 	})
 
+	t.Run("total accrual zero", func(t *testing.T) {
+		total, err := testDB.TotalAccrual(ctx, "other")
+		assert.NoError(t, err)
+		assert.Equal(t, float64(0), total)
+	})
+
 	t.Run("first in queue", func(t *testing.T) {
 		order, err := testDB.FirstInQueue(ctx)
 		assert.NoError(t, err)

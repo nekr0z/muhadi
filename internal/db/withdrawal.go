@@ -42,7 +42,7 @@ var (
 		withdrawalsColAt,
 	)
 	getTotalWithdrawnQuery = fmt.Sprintf(
-		"SELECT SUM(%s) FROM %s WHERE %s = $1",
+		"SELECT COALESCE(SUM(%s), 0) FROM %s WHERE %s = $1",
 		withdrawalsColAmount,
 		withdrawalsTable,
 		withdrawalsColUserName,

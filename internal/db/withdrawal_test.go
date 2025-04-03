@@ -50,6 +50,12 @@ func TestWithdrawals(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, float64(5100), total)
 	})
+
+	t.Run("total withdrawal zero", func(t *testing.T) {
+		total, err := testDB.TotalWithdrawn(ctx, "other")
+		assert.NoError(t, err)
+		assert.Equal(t, float64(0), total)
+	})
 }
 
 func assertSameWithdrawal(t *testing.T, expected, actual balance.Withdrawal) {

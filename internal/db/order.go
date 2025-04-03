@@ -57,7 +57,7 @@ var (
 		ordersColCreatedAt,
 	)
 	getTotalAccrualQuery = fmt.Sprintf(
-		"SELECT SUM(%s) FROM %s WHERE %s = $1",
+		"SELECT COALESCE(SUM(%s), 0) FROM %s WHERE %s = $1",
 		ordersColAccrual,
 		ordersTable,
 		ordersColUserName,
