@@ -26,10 +26,6 @@ func (s *Service) GetWithdrawals(ctx context.Context, userName string) ([]balanc
 	return s.storage.GetWithdrawals(ctx, userName)
 }
 
-func (s *Service) TotalWithdrawn(ctx context.Context, userName string) (float64, error) {
-	return s.storage.TotalWithdrawn(ctx, userName)
-}
-
 func (s *Service) CurrentAndWithdrawnBalance(ctx context.Context, userName string) (float64, float64, error) {
 	accrual, err := s.accrualGetter.TotalAccrual(ctx, userName)
 	if err != nil {

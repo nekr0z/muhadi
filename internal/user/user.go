@@ -4,8 +4,6 @@ import (
 	"context"
 	"crypto/sha256"
 	"errors"
-
-	"github.com/nekr0z/muhadi/internal/order"
 )
 
 type Service struct {
@@ -41,7 +39,3 @@ type Storage interface {
 }
 
 var ErrAlreadyExists = errors.New("user already exists")
-
-type OrderGetter interface {
-	GetOrders(ctx context.Context, userName string) ([]*order.Order, error)
-}

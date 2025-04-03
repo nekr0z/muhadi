@@ -41,8 +41,8 @@ func TestWithdrawals(t *testing.T) {
 		require.NoError(t, err)
 
 		require.Len(t, withdrawals, 2)
-		assertSameWithdrawal(t, *with2, withdrawals[0])
-		assertSameWithdrawal(t, *with1, withdrawals[1])
+		assertSameWithdrawal(t, *with1, withdrawals[0])
+		assertSameWithdrawal(t, *with2, withdrawals[1])
 	})
 
 	t.Run("total withdrawal", func(t *testing.T) {

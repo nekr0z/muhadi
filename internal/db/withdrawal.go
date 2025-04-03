@@ -35,7 +35,7 @@ var (
 		withdrawalColsStub,
 	)
 	getWithdrawalsQuery = fmt.Sprintf(
-		"SELECT %s FROM %s WHERE %s = $1 ORDER BY %s",
+		"SELECT %s FROM %s WHERE %s = $1 ORDER BY %s DESC",
 		withdrawalColsStub,
 		withdrawalsTable,
 		withdrawalsColUserName,
