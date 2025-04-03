@@ -37,6 +37,7 @@ func TestGetWithdrawals(t *testing.T) {
 		get(res, req)
 
 		assert.Equal(t, 204, res.Code)
+		assert.Equal(t, "application/json", res.Header().Get("Content-Type"))
 		assert.True(t, ctrl.Satisfied())
 	})
 

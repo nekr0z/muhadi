@@ -32,6 +32,8 @@ func GetWithdrawalsHandleFunc(log *zap.Logger, ws WithdrawalService, ts handlers
 			return
 		}
 
+		w.Header().Set("Content-Type", "application/json")
+
 		if len(withdrawals) == 0 {
 			w.WriteHeader(http.StatusNoContent)
 			return
@@ -46,7 +48,6 @@ func GetWithdrawalsHandleFunc(log *zap.Logger, ws WithdrawalService, ts handlers
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 	}
 }

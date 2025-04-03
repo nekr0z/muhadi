@@ -32,6 +32,8 @@ func GetOrdersHandleFunc(log *zap.Logger, os OrderService, ts handlers.TokenServ
 			return
 		}
 
+		w.Header().Set("Content-Type", "application/json")
+
 		if len(orders) == 0 {
 			w.WriteHeader(http.StatusNoContent)
 			return
@@ -46,7 +48,6 @@ func GetOrdersHandleFunc(log *zap.Logger, os OrderService, ts handlers.TokenServ
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 	}
 }
