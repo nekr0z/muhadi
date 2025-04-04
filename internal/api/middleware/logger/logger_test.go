@@ -42,6 +42,5 @@ func TestLog(t *testing.T) {
 	assert.Equal(t, http.MethodGet, m["method"])
 	assert.Equal(t, uri, m["uri"])
 	assert.Equal(t, int64(http.StatusOK), m["status"])
-	assert.Equal(t, int64(len(respString)), m["size"])
 	assert.Contains(t, m, "duration")
 }

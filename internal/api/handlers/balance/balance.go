@@ -11,9 +11,9 @@ import (
 )
 
 func BalanceHandleFunc(log *zap.Logger, bs BalanceService, ts handlers.TokenService) func(http.ResponseWriter, *http.Request) {
-	log = log.With(zap.String("handler", "user/balance"))
-
 	return func(w http.ResponseWriter, r *http.Request) {
+		log := log.With(zap.String("handler", "user/balance"))
+
 		userName, ok := handlers.AuthUser(r, ts)
 		if !ok {
 			http.Error(w, "unauthorized", http.StatusUnauthorized)

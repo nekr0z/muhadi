@@ -9,9 +9,9 @@ import (
 )
 
 func LoginHandleFunc(log *zap.Logger, us UserService, ts TokenService) func(http.ResponseWriter, *http.Request) {
-	log = log.With(zap.String("handler", "user/login"))
-
 	return func(w http.ResponseWriter, r *http.Request) {
+		log := log.With(zap.String("handler", "user/login"))
+
 		defer r.Body.Close()
 
 		var req userRequest

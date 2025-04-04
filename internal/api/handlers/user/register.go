@@ -11,9 +11,9 @@ import (
 )
 
 func RegisterHandleFunc(log *zap.Logger, us UserService, ts TokenService) func(http.ResponseWriter, *http.Request) {
-	log = log.With(zap.String("handler", "user/register"))
-
 	return func(w http.ResponseWriter, r *http.Request) {
+		log := log.With(zap.String("handler", "user/register"))
+
 		defer r.Body.Close()
 
 		var req userRequest

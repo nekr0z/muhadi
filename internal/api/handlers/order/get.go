@@ -13,9 +13,9 @@ import (
 )
 
 func GetOrdersHandleFunc(log *zap.Logger, os OrderService, ts handlers.TokenService) func(http.ResponseWriter, *http.Request) {
-	log = log.With(zap.String("handler", "user/orders::GET"))
-
 	return func(w http.ResponseWriter, r *http.Request) {
+		log := log.With(zap.String("handler", "user/orders::GET"))
+
 		userName, ok := handlers.AuthUser(r, ts)
 		if !ok {
 			http.Error(w, "unauthorized", http.StatusUnauthorized)

@@ -16,19 +16,17 @@ func Log(log *zap.Logger) func(http.Handler) http.Handler {
 
 			lw := loggingResponseWriter{
 				ResponseWriter: w,
-				responseData:   &responseData{},
 			}
 
 			next.ServeHTTP(&lw, r)
 
 			duration := time.Since(start)
 
-			log.Info("request",
+			log.Info("response served",
 				zap.String("uri", uri),
 				zap.String("method", method),
 				zap.Duration("duration", duration),
-				zap.Int("status", lw.responseData.status),
-				zap.Int("size", lw.responseData.size),
+				zap.Int("status", lw.status),
 			)
 		})
 	}
@@ -36,25 +34,19 @@ func Log(log *zap.Logger) func(http.Handler) http.Handler {
 
 type loggingResponseWriter struct {
 	http.ResponseWriter
-	responseData *responseData
+	status int
 }
 
 func (r *loggingResponseWriter) Write(b []byte) (int, error) {
-	if r.responseData.status == 0 {
+	if r.status == 0 {
 		r.WriteHeader(http.StatusOK)
 	}
 
 	size, err := r.ResponseWriter.Write(b)
-	r.responseData.size += size
 	return size, err
 }
 
 func (r *loggingResponseWriter) WriteHeader(statusCode int) {
 	r.ResponseWriter.WriteHeader(statusCode)
-	r.responseData.status = statusCode
-}
-
-type responseData struct {
-	status int
-	size   int
+	r.status = statusCode
 }

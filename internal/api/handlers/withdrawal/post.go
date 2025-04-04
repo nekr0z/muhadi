@@ -14,9 +14,9 @@ import (
 )
 
 func WithdrawalHandleFunc(log *zap.Logger, ws WithdrawalService, ts handlers.TokenService) func(http.ResponseWriter, *http.Request) {
-	log = log.With(zap.String("handler", "user/balance/withdraw"))
-
 	return func(w http.ResponseWriter, r *http.Request) {
+		log := log.With(zap.String("handler", "user/balance/withdraw"))
+
 		defer r.Body.Close()
 
 		userName, ok := handlers.AuthUser(r, ts)
@@ -41,7 +41,7 @@ func WithdrawalHandleFunc(log *zap.Logger, ws WithdrawalService, ts handlers.Tok
 			return
 		}
 
-		log = log.With(zap.Int("orderID", orderID))
+		log = log.With(zap.Int("order_id", orderID))
 		ctx := ctxlog.New(r.Context(), log)
 
 		err = ws.Withdraw(ctx, userName, orderID, req.Sum)

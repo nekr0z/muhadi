@@ -30,10 +30,11 @@ type App struct {
 func New() *App {
 	cfg := newConfig()
 
-	log, err := zap.NewDevelopment()
+	log, err := zap.NewProduction()
 	if err != nil {
 		panic(err)
 	}
+	defer log.Sync()
 
 	database, err := db.New(cfg.Database)
 	if err != nil {

@@ -14,9 +14,9 @@ import (
 )
 
 func PostOrderHandleFunc(log *zap.Logger, os OrderService, ts handlers.TokenService) func(http.ResponseWriter, *http.Request) {
-	log = log.With(zap.String("handler", "user/orders::POST"))
-
 	return func(w http.ResponseWriter, r *http.Request) {
+		log := log.With(zap.String("handler", "user/orders::POST"))
+
 		defer r.Body.Close()
 
 		userName, ok := handlers.AuthUser(r, ts)
@@ -40,6 +40,8 @@ func PostOrderHandleFunc(log *zap.Logger, os OrderService, ts handlers.TokenServ
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+
+		log = log.With(zap.Int("order_id", orderID))
 
 		ctx := ctxlog.New(r.Context(), log)
 
