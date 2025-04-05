@@ -35,7 +35,7 @@ func TestLog(t *testing.T) {
 	require.Len(t, logs, 1)
 
 	entry := logs[0]
-	assert.Contains(t, entry.Message, "request")
+	assert.Contains(t, entry.Message, "served")
 
 	m := entry.ContextMap()
 
