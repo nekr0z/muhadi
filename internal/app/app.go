@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"net/http"
-	"os"
 	"os/signal"
 	"syscall"
 	"time"
@@ -71,7 +70,7 @@ func New() *App {
 func (a *App) Run() error {
 	var appError error
 
-	serverChan := make(chan struct{}, 1)
+	serverChan := make(chan struct{})
 	go func() {
 		a.logger.Info("running server")
 		if err := a.server.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
@@ -79,11 +78,12 @@ func (a *App) Run() error {
 			appError = errors.Join(appError, err)
 		}
 		a.logger.Info("server stopped")
-		serverChan <- struct{}{}
+		close(serverChan)
 	}()
 
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	ctx = ctxlog.New(ctx, a.logger)
+
 	reconcilerChan := make(chan struct{})
 	go func() {
 		a.logger.Info("running reconciler")
@@ -92,27 +92,24 @@ func (a *App) Run() error {
 		close(reconcilerChan)
 	}()
 
-	sigChan := make(chan os.Signal, 1)
-	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
-
 	select {
-	case <-sigChan:
-		a.logger.Info("Signal received, will shutdown")
+	case <-ctx.Done():
+		a.logger.Info("Signal received, shutting down")
+
+		shutdownCtx, shutdownRelease := context.WithTimeout(context.Background(), 15*time.Second)
+		defer shutdownRelease()
+
+		if err := a.server.Shutdown(shutdownCtx); err != nil {
+			a.logger.Error("server shutdown error", zap.Error(err))
+			appError = errors.Join(appError, err)
+		}
 	case <-serverChan:
 		a.logger.Info("Server stopped, will exit")
-	}
-
-	cancel()
-
-	shutdownCtx, shutdownRelease := context.WithTimeout(context.Background(), 15*time.Second)
-	defer shutdownRelease()
-
-	if err := a.server.Shutdown(shutdownCtx); err != nil {
-		a.logger.Error("server shutdown error", zap.Error(err))
-		appError = errors.Join(appError, err)
+		cancel()
 	}
 
 	<-reconcilerChan
+	<-serverChan
 
 	if err := a.db.Close(); err != nil {
 		a.logger.Error("database close error", zap.Error(err))
